@@ -400,11 +400,14 @@ class System(object):
 
     """
 
-    def __init__(self, central, iobs=90.0):
+    def __init__(self, central, iobs=90.0, dilution=0.):
         self.central = central
         self.central.system = self
         self.bodies = []
         self.iobs = iobs
+
+        assert 0 <= dilution < 1, 'Dilution must be between 0 and 1!'
+        self.dilution = dilution
 
     def __len__(self):
         return len(self.bodies)
@@ -453,7 +456,14 @@ class System(object):
         t = np.atleast_1d(t)
 
         # Compute the light curve using the Kepler solver.
-        return self._get_solver().light_curve(s.flux, t, texp, tol, maxdepth)
+        flux = self._get_solver().light_curve(s.flux, t, texp, tol, maxdepth)
+
+        # Apply dilution. 0.9 dilution (central is 1/10 of light in aperture)
+        #   will turn 0.9 flux into 0.99
+        flux = 1 - (1 - flux)*(1 - self.dilution)
+
+        return flux
+
 
     def radial_velocity(self, t):
         """
