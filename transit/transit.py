@@ -349,6 +349,21 @@ class Body(object):
         return math.asin(arg) * self.period / math.pi
 
     @property
+    def duration_approx(self):
+        """Same as duration, but no warning.
+        """
+        self._check_ps()
+        rstar = self.system.central.radius
+        k = self.r/rstar
+        si = math.sin(math.radians(self.incl))
+
+        arg = rstar / self.a * math.sqrt((1+k) ** 2 - self.b**2) / si
+
+        return math.asin(arg) * self.period / math.pi
+
+
+
+    @property
     def e(self):
         return self._e
 
