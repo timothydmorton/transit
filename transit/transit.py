@@ -69,7 +69,7 @@ class Central(object):
     @q1.setter
     def q1(self, v):
         if not 0 <= v <= 1:
-            raise ValueError("Invalid limb darkening coefficient")
+            raise InvalidParameterError("Invalid limb darkening coefficient")
         self._q1 = v
 
     @property
@@ -79,7 +79,7 @@ class Central(object):
     @q2.setter
     def q2(self, v):
         if not 0 <= v <= 1:
-            raise ValueError("Invalid limb darkening coefficient")
+            raise InvalidParameterError("Invalid limb darkening coefficient")
         self._q2 = v
 
     @property
@@ -228,7 +228,7 @@ class Body(object):
     @r.setter
     def r(self, r):
         if r < 0:
-            raise ValueError("Invalid planet radius (must be non-negative)")
+            raise InvalidParameterError("Invalid planet radius (must be non-negative)")
         self._r = r
 
     @property
@@ -247,7 +247,7 @@ class Body(object):
     @period.setter
     def period(self, P):
         if P <= 0.0:
-            raise ValueError("Invalid period (must be positive)")
+            raise InvalidParameterError("Invalid period (must be positive)")
         self._check_ps()
         mstar = self.system.central.mass
         self._a = (_G*P*P*(self.mass+mstar)/(4*np.pi*np.pi)) ** (1./3)
@@ -301,7 +301,7 @@ class Body(object):
     @b.setter
     def b(self, b):
         if b < 0.0:
-            raise ValueError("Invalid impact parameter (must be non-negative)")
+            raise InvalidParameterError("Invalid impact parameter (must be non-negative)")
 
         self._check_ps()
         rstar = self.system.central.radius
@@ -314,7 +314,7 @@ class Body(object):
 
         arg = b * factor * rstar / self.a
         if arg > 1.0:
-            raise ValueError("Invalid impact parameter")
+            raise InvalidParameterError("Invalid impact parameter")
         self.incl = math.degrees(math.acos(arg))
         self._b = None
 
@@ -370,7 +370,7 @@ class Body(object):
     @e.setter
     def e(self, e):
         if not 0 <= e < 1.0:
-            raise ValueError("Only bound orbits are permitted (0 <= e < 1)")
+            raise InvalidParameterError("Only bound orbits are permitted (0 <= e < 1)")
         self._e = e
         self._b = None
 
@@ -487,3 +487,10 @@ class System(object):
         # rv = self._get_solver().radial_velocity(np.atleast_1d(t))
         # return -(rv / mr[None, :]).sum(axis=1)
         # return -(rv * mr[None, :]).sum(axis=1)
+
+
+
+# Custom exceptions
+
+class InvalidParameterError(ValueError):
+    pass
