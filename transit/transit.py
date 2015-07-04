@@ -210,7 +210,7 @@ class Body(object):
         assert pomega is None or omega is None, \
             "You can't specify omega and pomega"
         if omega is not None:
-            self.pomega = 0.5 * np.pi - omega
+            self.omega = omega
         elif pomega is not None:
             self.pomega = pomega
         else:
