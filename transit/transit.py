@@ -333,7 +333,7 @@ class Body(object):
     def duration(self):
         """
         The approximate duration of the transit :math:`T_\mathrm{tot}` from
-        Equation (14) in Winn (2010).
+        Equations (14), (16) in Winn (2010)
 
         """
         self._check_ps()
@@ -342,11 +342,11 @@ class Body(object):
         si = math.sin(math.radians(self.incl))
         arg = rstar / self.a * math.sqrt((1+k) ** 2 - self.b**2) / si
 
-        if self.e > 0.0:
-            logging.warn("The duration of an eccentric transit isn't analytic."
-                         " Use this value with caution")
+        factor = 1.0
+        if self.e > 0.0: 
+            factor = math.sqrt(1 - e**2) / (1 + e*math.sin(self.omega))
 
-        return math.asin(arg) * self.period / math.pi
+        return math.asin(arg) * self.period / math.pi * factor
 
     @property
     def duration_approx(self):
