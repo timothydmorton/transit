@@ -342,9 +342,9 @@ class Body(object):
         si = math.sin(math.radians(self.incl))
         arg = rstar / self.a * math.sqrt((1+k) ** 2 - self.b**2) / si
 
-        if self.e > 0.0:
-            logging.warn("The duration of an eccentric transit isn't analytic."
-                         " Use this value with caution")
+        #if self.e > 0.0:
+        #    logging.warn("The duration of an eccentric transit isn't analytic."
+        #                 " Use this value with caution")
 
         return math.asin(arg) * self.period / math.pi
 
